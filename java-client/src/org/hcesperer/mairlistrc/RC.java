@@ -90,8 +90,8 @@ public class RC implements StatusHandler {
 							this.main,
 							"Kann auf mAirList nicht zugreifen! Programm wird beendet.\n\n"
 									+ "Foglendes muß in mAirLists config/remote.ini eingetragen werden:\n"
-									+ "    [REMOTE1]\n" + "    type=network\n"
-									+ "    port=9300");
+									+ "    [REMOTE1]\n" + "    Type=Network\n"
+									+ "    Port=9300");
 			System.exit(1);
 		}
 
