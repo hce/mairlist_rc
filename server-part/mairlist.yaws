@@ -1,0 +1,53 @@
+<erl>
+
+-define(STATUSFILEPATH, "/var/db/mairlist/status").
+
+out(A) ->
+    Sock = A#arg.clisock,
+    Pid = spawn(fun() ->
+			receive
+			    {ok, Yawspid} ->
+				error_logger:info_msg("Starting to monitor mairlist status."),
+				yaws_api:stream_process_deliver(Sock, << "hcok" >>),
+				check_loop(Sock, Yawspid, undefined);
+			    {discard, Yawspid} ->
+				yaws_api:stream_process_end(Sock, Yawspid)
+			end
+		end),
+    [{header, {content_length, 819200000}},
+     {streamcontent_from_pid, "application/octet-stream", Pid}].
+
+check_loop(Sock, P, undefined) ->
+    Lastmod = filelib:last_modified(?STATUSFILEPATH),
+    check_loop(Sock, P, Lastmod);
+check_loop(Sock, P, Lastmod) ->
+    Lastmod1 = filelib:last_modified(?STATUSFILEPATH),
+    if
+	Lastmod1 =/= Lastmod ->
+	    update_status(Sock, ?STATUSFILEPATH);
+	true ->
+	    Sa = << "Still alive!" >>,
+	    Sa_len = size(Sa),
+	    yaws_api:stream_process_deliver(Sock, << Sa_len:8, Sa/binary >>)
+    end,
+    receive after 1000 -> ok end, % Sleep one safe second
+    case ssl:recv(Sock, 512, 4000) of
+	{error, closed} ->
+	    error_logger:info_msg("~p Stopping to monitor mairlist status.", [self()]),
+	    yaws_api:stream_process_end(Sock, P);
+	_Else ->
+	    check_loop(Sock, P, Lastmod1)
+    end.
+
+update_status(Sock, File) ->
+    {ok, Cnt} = file:read_file(File),
+    Cnt_l = size(Cnt),
+    if Cnt_l < 256 -> ok end,         % Assertion
+    Bin = <<
+	   Cnt_l:8,
+	   Cnt/binary
+	   >>,
+    yaws_api:stream_process_deliver(Sock, Bin).
+    
+
+</erl>
