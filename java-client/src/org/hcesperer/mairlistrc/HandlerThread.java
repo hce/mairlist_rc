@@ -59,7 +59,7 @@ public class HandlerThread implements Runnable {
 			String command = null;
 			try {
 				command = readCommand();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				status("IOException/readcommand: " + e);
 				this.huc = null;
 				this.is = null;
@@ -67,7 +67,7 @@ public class HandlerThread implements Runnable {
 			}
 			try {
 				handleCommand(command);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				status("IOException/handlecommand: " + e);
 				continue;
 			}
