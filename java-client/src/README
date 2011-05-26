@@ -1,0 +1,26 @@
+Telefonnummer 0xxxx-xxxxxxxxxx anrufen. Sobald Ansage zu hören ist,
+sind folgende PINs möglich:
+
+xxx-x Alles STOPPEN
+xxx-x Playlist "PC1" abspielen
+xxx-x Playlist "PC1" stoppen
+xxx-x Playlist "PC2" abspielen
+xxx-x Playlist "PC2" stoppen
+xxx-x Rückrufwunsch anzeigen
+
+xxx-x Jingle "1" abspielen
+xxx-x Jingle "2" abspielen
+xxx-x Jingle "3" abspielen
+xxx-x Jingle "4" abspielen
+xxx-x Jingle "5" abspielen
+xxx-x Jingle "6" abspielen
+xxx-x Jingle "7" abspielen
+xxx-x Jingle "8" abspielen
+
+Bei Fragen hc kontaktieren <hc@radiodarmstadt.de> | 0xxx-xxx-xxxx
+(Nummer bitte nicht weitergeben)
+
+Foglendes muß in mAirLists config/remote.ini eingetragen werden:
+    [REMOTE1]
+    type=network
+    port=9300
